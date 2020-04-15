@@ -3,11 +3,8 @@
 
 
 
-void test() {
+/*..void test() {
     //2 bytes
-    Adress a1 = 4;
-    byte b1 = 0xcb;
-    byte b0 = 0x0a;
     word w1 = 0xcb0a;
     w_write(a1, w1);
 
@@ -19,13 +16,21 @@ void test() {
    
     assert(b0 == b0res);
     assert(b1 == b1res);
-}
+}*/
 
-int main()
+int main(int argc, char * argv[])
 {
-    test(); 
-
+    if ( argc == 1)
+    {
+        printf("User session:\n");
+    }
+    else 
+    {
+        load_file(argv[1]);
+        printf(" File %s opened\n", argv[1]);
+    }        
     return 0;
 }
+
 
 
