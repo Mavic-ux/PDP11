@@ -1,11 +1,17 @@
+CC=gcc
+
+CFLAGS=-c -Wall -Wextra
+
 all: pdp11
 
 pdp11: pdp.o main.o
-        gcc pdp.o main.o -o a.out
-pdp.o: pdp.c
-        gcc -c -Wall -Wextra pdp.c
+	$(CC) pdp.o main.o -o a.out
+
+pdp11.o: pdp11.c
+	$(CC) $(CFLAGS) pdp.c
+
 main.o: main.c
-        gcc -c -Wall -Wextra main.c
+	$(CC) $(CFLAGS) main.c
 
 
 clean:
