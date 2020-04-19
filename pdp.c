@@ -1,16 +1,40 @@
 
 #include "pdp.h"
 
+
+
 void w_write(Adress a, word w)
 {
-    mem[a] = w;
+    if(a < 8)
+        reg[a] = w;
+
+    else
+    {
+        mem[a + 1] = (byte)(w >> 8);
+        mem[a] = (byte)w;
+       
+    }
+
+
 }
 
 word w_read(Adress a)
 {
-    return mem[a];
-}
+    word w = 0;
+
+    if(a < 8)
+        w = reg[a];
+    else
+    {
+        w = ((word)mem[a + 1]) << 8;
+        w |= (word)mem[a];
+    }
     
+    return w;
+
+
+}
+
 byte b_read(Adress a)
 {
     byte b;
@@ -34,6 +58,7 @@ void b_write(Adress a, byte b)
         mem[a - 1] |= (word)(b << 8);
     }
 }
+
 void trace (const char * fmt, ...)
 {
     va_list ap;
@@ -42,24 +67,38 @@ void trace (const char * fmt, ...)
     va_end(ap);
 
 }
+
 void load_file(const char* filename)
 {
-    FILE * p= NULL;
+    FILE* p;
     p = fopen(filename, "rb");
-    Adress a = 0;
-    word num = 0;
+
+    Adress adr = 01000;
+    unsigned int n = 0;
     byte b = 0;
-    if (p == NULL)
+
+    while(fscanf(p, "%04x%04x", &adr, &n) == 2)
     {
-        perror(filename);
-        printf("File opening error. \n");
-        exit(1);
+        for (unsigned int i = 0; i < n; i++)
+        {
+            fscanf(p, "%02hhx ", &b);
+            b_write(adr, b);
+            adr++;
+        }
+
     }
-   /*while(fscanf(p, "%x%x", &a, &num) ....)
-    {
-       ... 
-    
-    }/*
 
     fclose(p);
+}
+
+
+
+void print_reg()
+{
+    for(int i = 0; i < 8; i++)
+    {
+        trace("R%d:%06o ", i, reg[i]);
+    }
+    trace("\n");
+   
 }
