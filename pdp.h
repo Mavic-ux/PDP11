@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
+
 #define MEMSIZE 64*1024
 
 typedef unsigned char byte;
@@ -14,7 +15,6 @@ typedef unsigned int word;
 typedef word Adress;
 
 word mem[MEMSIZE];
-
 word reg[8];
 #define pc reg[7]
 
@@ -23,9 +23,16 @@ byte b_read(Adress);
 void w_write(Adress, word);
 word w_read(Adress);
 
+void do_MOV();
+void do_ADD();
+void do_HALT();
+void do_nothing();
+
 void trace (const char *  , ...);
 
 void load_file(const char* file);
 
+void run();
 
+void print_reg();
 #endif 
