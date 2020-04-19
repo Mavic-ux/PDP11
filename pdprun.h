@@ -7,21 +7,37 @@ typedef struct
     word opcode;
     char * name;
     void (*do_func)(void);   //err
-    
+    char params;
 } Command;
 
-void do_MOV();
-void do_ADD();
-void do_HALT();
-void do_nothing();
+enum PARAMS_MASK {
 
-Command cmd[] = {
-    {0170000, 0010000, "mov", do_MOV},
-    {0170000, 0060000, "add", do_ADD},
-    {0777777, 0000000, "halt", do_HALT},
-    {0000000, 0000000, "unknown", do_nothing}
+    NO_PARAMS,
+    HAS_DD,
+    HAS_SS,
+
 };
 
 
-#endif
+Command cmd[] = {
+    {0170000, 0010000, "mov", do_MOV, HAS_SS | HAS_DD},
+    {0170000, 0060000, "add", do_ADD, HAS_SS | HAS_DD},
+    {0177777, 0000000, "halt", do_HALT, NO_PARAMS},
+};
 
+typedef struct {
+
+    word val;
+    word adr;
+
+}Arg;
+
+
+
+Arg get_mr(word w);
+
+
+void run();
+
+
+#endif
