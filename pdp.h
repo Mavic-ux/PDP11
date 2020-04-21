@@ -26,7 +26,7 @@ word w_read(Adress);
 void do_MOV();
 void do_ADD();
 void do_HALT();
-void do_nothing();
+
 
 void trace (const char *  , ...);
 
