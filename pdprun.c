@@ -68,12 +68,6 @@ Arg get_mr(word w)
     return res;
 }
 
-void do_halt()
-{
-    trace("THE END\n");
-    print_reg();
-    exit(EXIT_SUCCESS);
-}
 
 void do_MOV()
 {
@@ -105,11 +99,7 @@ void do_HALT()
 
 }
 
-void do_nothing()
-{
 
-
-}
 
 void run()
 {
