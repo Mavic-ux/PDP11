@@ -23,11 +23,7 @@ Arg get_mr(word w)
                 break;
         case 1: res.adr = reg[r];
 
-                if (Bw == 0)
-                    res.val = w_read(res.adr);
-
-                else if (Bw == 1)
-                    res.val = b_read(res.adr);
+                res.val = Bw ? b_read(res.adr) : w_read(res.adr);
                 
                 trace("(R%d) ", r);
 
@@ -71,14 +67,7 @@ Arg get_mr(word w)
 
 void do_MOV()
 {
-    if (Bw == 0)
-        w_write(dd.adr, ss.val);
-
-    else if (Bw == 1)
-        b_write(dd.adr, ss.val);
-
-    else
-        exit(0);
+    Bw ? b_write(dd.adr, ss.val) : w_write(dd.adr, ss.val);
 
     Bw = 0;
 }
