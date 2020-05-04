@@ -26,6 +26,8 @@ word w_read(Adress);
 void do_MOV();
 void do_ADD();
 void do_HALT();
+void do_CLR();
+void do_SOB();
 
 
 void trace (const char *  , ...);
@@ -35,4 +37,5 @@ void load_file(const char* file);
 void run();
 
 void print_reg();
+
 #endif 
