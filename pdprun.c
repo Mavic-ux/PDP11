@@ -112,7 +112,7 @@ void do_MOV()
 void do_ADD()
 {
     word res = dd.val + ss.val;
-    w_write(dd.adr, (byte)res);
+    w_write(dd.adr, res);
     
     get_flag(res);
     flag_C = (res >> 16) & 1;
