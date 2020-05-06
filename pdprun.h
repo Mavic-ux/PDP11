@@ -1,51 +1,45 @@
-#ifndef pdprun_h
-#define pdprun_h
 
-typedef struct
-{
-    word mask;
-    word opcode;
-    char * name;
-    void (*do_func)(void);   //err
-    char params;
-} Command;
+#ifndef pdp_h
+#define pdp_h
 
-enum PARAMS_MASK {
-
-    NO_PARAMS,
-    HAS_DD,
-    HAS_SS,
-    HAS_N,
-    HAS_NN,
-    HAS_R,
-    HAS_XX,
-    HAS_B,
-
-};
+#include <stdio.h>
+#include <assert.h>
+#include <stdlib.h>
+#include <stdarg.h>
 
 
-Command cmd[] = {
-    {0070000, 0010000, "MOV", do_MOV, HAS_B | HAS_SS | HAS_DD},
-    {0170000, 0060000, "ADD", do_ADD, HAS_SS | HAS_DD},
-    {0177777, 0000000, "HALT", do_HALT, NO_PARAMS},
-    {0077700, 0005000, "CLR", do_CLR, HAS_DD},
-    {0177000, 0077000, "SOB", do_SOB, HAS_NN},
- 
-};
+#define MEMSIZE 64*1024
 
-typedef struct {
+typedef unsigned char byte;
+typedef unsigned int word;
+typedef word Adress;
 
-    word val;
-    word adr;
+word mem[MEMSIZE];
+word reg[8];
+#define pc reg[7]
 
-}Arg;
+void b_write(Adress, byte);
+byte b_read(Adress);
+void w_write(Adress, word);
+word w_read(Adress);
+
+void do_MOV();
+void do_ADD();
+void do_HALT();
+void do_CLR();
+void do_SOB();
 
 
+void trace (const char *  , ...);
 
-Arg get_mr(word w);
+void load_file(const char* file);
 
+void NZVC();
+
+void get_flag();
 
 void run();
 
+void print_reg();
 
-#endif
+#endif 
