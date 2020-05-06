@@ -34,6 +34,10 @@ void trace (const char *  , ...);
 
 void load_file(const char* file);
 
+void NZVC();
+
+void get_flag();
+
 void run();
 
 void print_reg();
