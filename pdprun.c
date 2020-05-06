@@ -9,10 +9,11 @@ byte Bw = 0;
 word NN = 0;
 word r = 0;
 
-byte flag_N = 0;
-byte flag_Z = 0;
-byte flag_V = 0;
-byte flag_C = 0;
+byte flag_N  = 0;
+byte flag_Z  = 0;
+byte flag_V  = 0;
+byte flag_C  = 0;
+
 
 Arg get_mr(word w)
 {
@@ -96,18 +97,28 @@ Arg get_mr(word w)
 void do_MOV()
 {    
     
-    Bw ? b_write(dd.adr, ss.val) : w_write(dd.adr, ss.val);
+    Bw ? b_write(dd.adr,ss.val) : w_write(dd.adr,ss.val);
   
-    Bw = 0;
+    get_flag(ss.val);
     
+    flag_V = 0;
+
+    Bw = 0;
+
+    NZVC();
     trace("\n");
 }
 
 void do_ADD()
 {
-    byte res = dd.val + ss.val;
-    w_write(dd.adr, res);
+    word res = dd.val + ss.val;
+    w_write(dd.adr, (byte)res);
+    
+    get_flag(res);
+    flag_C = (res >> 16) & 1;
     trace("%d + %d\n ", dd.val, ss.val);
+    NZVC();
+    trace("\n");
 }
 
 void do_CLR()
@@ -115,13 +126,15 @@ void do_CLR()
     
     Bw ? b_write(dd.adr, 0) : w_write(dd.adr, 0);   
   
+    trace("\n");
+
     flag_N = 0;
     flag_V = 0;
     flag_C = 0;
     flag_Z = 1;
-    
+
+    NZVC();
     trace("\n");
-    
     Bw = 0;
 
 }
@@ -130,6 +143,7 @@ void do_CLR()
 
 void do_SOB()
 {
+    NZVC();
     reg[r]--;
     
     if (reg[r] > 0)
@@ -142,12 +156,29 @@ void do_HALT()
 {
     trace("\n");
     trace("---------------- halted ---------------\n");
+
     print_reg();
     exit(0);
 
 }
 
+void NZVC()
+{
+    trace("\n");
+    trace("%c", flag_N ? 'N' : '-');
+    trace("%c", flag_Z ? 'Z' : '-');
+    trace("%c", flag_V ? 'V' : '-');
+    trace("%c", flag_C ? 'C' : '-');
+}
 
+void get_flag(word p)
+{
+    flag_Z = (p == 0) ? 1: 0;
+    
+    flag_N = Bw ? ((p >> 7) & 1) : ((p >> 15) & 1);
+
+
+}
 
 void run()
 {
@@ -202,3 +233,4 @@ void run()
         }
     }
 }
+
