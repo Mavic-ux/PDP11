@@ -2,9 +2,11 @@
 #include "pdprun.h"
 #include <stdlib.h>
 
-Arg dd, ss;
+Arg ss = {0, 0};
+Arg dd = {0, 0};
 
-
+extern word mem[MEMSIZE];
+extern word reg[8];
 byte Bw = 0;
 word NN = 0;
 word r = 0;
@@ -68,17 +70,16 @@ Arg get_mr(word w)
 
         case 3: res.adr = w_read(reg[r]);
               
+                res.val = Bw ? b_read(res.adr) : w_read(res.adr);
+                    reg[r] += 2;
+                
                 if (r == 7 || r == 6)
                 {
-                    res.val = Bw ? b_read(res.adr) : w_read(res.adr);
-                    reg[r] += 2;
                     trace("@#%06o ", res.adr);
                 }
 
                 else
                 {
-                    res.val = Bw ? b_read(res.adr) : w_read(res.adr);
-                    reg[r] += 2;
                     trace("@(R%o)+ ", r);
                 }
 
@@ -102,6 +103,8 @@ void do_MOV()
     get_flag(ss.val);
     
     flag_V = 0;
+    
+    print_new_val();
 
     Bw = 0;
 
@@ -112,7 +115,7 @@ void do_MOV()
 void do_ADD()
 {
     word res = dd.val + ss.val;
-    w_write(dd.adr, (byte) res);
+    w_write(dd.adr, (byte)res);
     
     get_flag(res);
     flag_C = (res >> 16) & 1;
@@ -133,6 +136,7 @@ void do_CLR()
     flag_C = 0;
     flag_Z = 1;
 
+    print_new_val();
     NZVC();
     trace("\n");
     Bw = 0;
@@ -169,6 +173,12 @@ void NZVC()
     trace("%c", flag_Z ? 'Z' : '-');
     trace("%c", flag_V ? 'V' : '-');
     trace("%c", flag_C ? 'C' : '-');
+}
+
+void print_new_val()
+{
+    trace("r%d = %o\t", dd.adr, ss.val);
+
 }
 
 void get_flag(word p)
@@ -233,4 +243,3 @@ void run()
         }
     }
 }
-
