@@ -14,6 +14,7 @@ typedef unsigned char byte;
 typedef unsigned int word;
 typedef word Adress;
 
+
 #define pc reg[7]
 
 void b_write(Adress, byte);
@@ -30,7 +31,9 @@ void do_SOB();
 
 void trace (const char *  , ...);
 
-void load_file(const char* file);
+void load_file(const char* file);;
+
+void print_new_val();
 
 void NZVC();
 
