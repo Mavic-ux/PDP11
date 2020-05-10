@@ -14,8 +14,6 @@ typedef unsigned char byte;
 typedef unsigned int word;
 typedef word Adress;
 
-word mem[MEMSIZE];
-word reg[8];
 #define pc reg[7]
 
 void b_write(Adress, byte);
