@@ -6,16 +6,17 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <stdarg.h>
-
+#include <stdint.h>
 
 #define MEMSIZE 64*1024
 
-typedef unsigned char byte;
-typedef unsigned int word;
+typedef uint8_t byte;
+typedef uint16_t word;
 typedef word Adress;
 
 
 #define pc reg[7]
+#define sp reg[6]
 
 void b_write(Adress, byte);
 byte b_read(Adress);
@@ -27,6 +28,10 @@ void do_ADD();
 void do_HALT();
 void do_CLR();
 void do_SOB();
+void do_BR();
+void do_BEQ();
+
+void do_unknown();
 
 
 void trace (const char *  , ...);
@@ -37,7 +42,7 @@ void print_new_val();
 
 void NZVC();
 
-void get_flag();
+void get_flag(word p);
 
 void run();
 
