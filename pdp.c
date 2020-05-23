@@ -85,7 +85,7 @@ void load_file(const char* filename)
         exit(1);
 
     }
-    while(fscanf(p, "%04x%04x", &adr, &n) == 2)
+    while(fscanf(p, "%hx%hx", &adr, &n) == 2)
     {
         for (unsigned int i = 0; i < n; i++)
         {
