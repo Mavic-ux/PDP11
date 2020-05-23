@@ -10,11 +10,12 @@ extern word reg[8];
 byte Bw = 0;
 word NN = 0;
 word r = 0;
+int8_t xx  = 0;
 
-byte flag_N  = 0;
-byte flag_Z  = 0;
-byte flag_V  = 0;
-byte flag_C  = 0;
+uint8_t flag_N  = 0;
+uint8_t flag_Z  = 0;
+uint8_t flag_V  = 0;
+uint8_t flag_C  = 0;
 
 
 Arg get_mr(word w)
@@ -43,26 +44,23 @@ Arg get_mr(word w)
 
         case 2: res.adr = reg[r];
 
-                if (Bw == 0)
+                if(Bw == 0)
                 {
                     res.val = w_read(res.adr);
                     reg[r] += 2;
                 }
-                else if (Bw == 1)
+                else if(Bw == 1)
                 {
                     res.val = b_read(res.adr);
                     reg[r] += (r < 6) ? 1 : 2;
                 }
 
-                if (r == 7)
+                if(r == 7)
                 {
-                  
                     trace("#%06o ", res.val);
                 }
-
                 else
                 {
-                 
                     trace("(R%d)+ ", r);
                 }
 
@@ -71,7 +69,7 @@ Arg get_mr(word w)
         case 3: res.adr = w_read(reg[r]);
               
                 res.val = Bw ? b_read(res.adr) : w_read(res.adr);
-                    reg[r] += 2;
+                reg[r] += 2;
                 
                 if (r == 7 || r == 6)
                 {
@@ -82,6 +80,24 @@ Arg get_mr(word w)
                 {
                     trace("@(R%o)+ ", r);
                 }
+
+                break;
+
+        case 4: if (Bw == 0)
+                {
+                    reg[r] -= 2;
+                    res.adr = reg[r];
+                    res.val = w_read(res.adr);
+                }
+                else 
+                {
+                    reg[r] -= (r < 6) ? 1 : 2;
+                }
+                    
+                res.adr = reg[r];
+                res.val = w_read(res.adr);
+
+                trace("-(R%d) ", r);
 
                 break;
                    
@@ -128,8 +144,6 @@ void do_CLR()
 {
     
     Bw ? b_write(dd.adr, 0) : w_write(dd.adr, 0);   
-  
-    trace("\n");
 
     flag_N = 0;
     flag_V = 0;
@@ -142,8 +156,6 @@ void do_CLR()
     Bw = 0;
 
 }
-
-
 
 void do_SOB()
 {
@@ -163,6 +175,27 @@ void do_HALT()
 
     print_reg();
     exit(0);
+
+}
+
+void do_BR()
+{
+    pc += 2*xx;
+    trace("%6ho ", pc);
+    NZVC();
+    trace("\n");
+}
+
+void do_BEQ()
+{
+    if(flag_Z)
+        do_BR();
+}
+
+
+void do_unknown()
+{
+    exit(1);
 
 }
 
@@ -193,7 +226,7 @@ void get_flag(word p)
 void run()
 {
     pc = 01000;
-
+    sp = 01000;
     trace("---------------- running --------------\n");
 
     while(1)
@@ -223,12 +256,15 @@ void run()
                     ss = get_mr(w >> 6);
 
                 if(cmd[i].params & HAS_DD)
-                    dd = get_mr(w);
-                
+                    dd = get_mr(w); 
 
                 if(cmd[i].params & HAS_NN)
                     NN = w & 077;
-        
+
+                if(cmd[i].params & HAS_XX)
+                    xx = w & 0377;
+              
+
                 cmd[i].do_func();
 
                 Bw = 0;
