@@ -30,7 +30,10 @@ Command cmd[] = {
     {0170000, 0060000, "ADD", do_ADD, HAS_SS | HAS_DD},
     {0177777, 0000000, "HALT", do_HALT, NO_PARAMS},
     {0077700, 0005000, "CLR", do_CLR, HAS_DD},
-    {0177000, 0077000, "SOB", do_SOB, HAS_NN},
+    {0177000, 0077000, "SOB", do_SOB, HAS_R | HAS_NN},
+    {0177400, 0000400, "BR", do_BR, HAS_XX},
+    {0177400, 0001400, "BEQ", do_BEQ, HAS_XX},
+    {0000000, 0000000, "unknown cmd", do_unknown, NO_PARAMS}, 
  
 };
 
